@@ -1,13 +1,13 @@
 import telebot
 
-bot = telebot.TeleBot('5176514754:AAHx4jWsOtLAacgQ6C5-T9D6FHe1y6wnwEo')
+bot = telebot.TeleBot('5176514754:AAHx4jWsOtLAacgQ6C5-T9D6FHe1y6wnwEo') 
 
 @bot.message_handler(commands=["start"])
 def start(message, res=False):
     chat_id = message.chat.id
 
     bot.send_message(chat_id,
-                     text="Привет, {0.first_name}! Я тестовый бот для курса программирования на языке ПаЙтон".format(
+                     text="Привет, {0.first_name}! Я тестовый бот для курса программирования на языке Пайтон".format(
                          message.from_user))
 
 
@@ -20,6 +20,6 @@ def get_text_messages(message):
 
 
 # -----------------------------------------------------------------------
-bot.polling(none_stop=True, interval=0) # Запускаем бота
+bot.polling(none_stop=True, interval=0)
 
 print()

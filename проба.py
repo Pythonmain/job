@@ -1,25 +1,25 @@
-name = "Богдан"
-print(name)
+import telebot
 
-age = "18"
-print(age)
+bot = telebot.TeleBot('5176514754:AAHx4jWsOtLAacgQ6C5-T9D6FHe1y6wnwEo') 
 
-name = "Богдан"
-print(name * 5)
+@bot.message_handler(commands=["start"])
+def start(message, res=False):
+    chat_id = message.chat.id
 
-name = input("Введите ваше имя")
-age = input("Введите ваш возраст")
+    bot.send_message(chat_id,
+                     text="Привет, {0.first_name}! Я тестовый бот для курса программирования на языке ПаЙтон".format(
+                         message.from_user))
 
-print("Добрый день Боб. Ты такой старый, как двигатель автоваза")
 
-age_int = int(age)
+# Получение сообщений от юзера
+@bot.message_handler(content_types=['text'])
+def get_text_messages(message):
+    chat_id = message.chat.id
+    ms_text = message.text
+    bot.send_message(chat_id, text="Я тебя слышу!!! Ваше сообщение: " + ms_text)
 
-str = input("введитен ваше имя")
-print(len(str))
 
-name = input("попробуй решить, скажи ответ на задачку: 2+2*2 :)")
-if name == "6":
-    name="ооо да, а ты прав"
-else:
-    name="к сожалению ты ошибся, тебе обратно в школу :("
-print(name)
+# -----------------------------------------------------------------------
+bot.polling(none_stop=True, interval=0) # Запускаем бота
+
+print()
