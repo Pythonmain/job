@@ -44,7 +44,10 @@ def get_text_messages(message):
         bot.send_message(chat_id, text="Развлечения", reply_markup=markup)
 
     elif ms_text == "/dog" or ms_text == "Прислать собаку":
-        bot.send_message(chat_id, text="ещё не готово")
+
+        contents = requests.get('https://random.dog/woof.json').json()
+        urLDOG = contents['url']
+        bot.send_photo(chat_id, photo=urLDOG, caption="Вот и пёс")
 
     elif ms_text == "Прислать анекдот":
         bot.send_message(chat_id, text=get_anekdot())
