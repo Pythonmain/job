@@ -1,4 +1,5 @@
 import bs4
+import requests
 import telebot
 from telebot import types
 
@@ -46,16 +47,8 @@ def get_text_messages(message):
         bot.send_message(chat_id, text="ещё не готово")
 
     elif ms_text == "Прислать анекдот":
-        def get_anekdot():
-            array_anekdots = [1]
-            req_anek = requests.get('http://anekdotme.ru/random')
-            soup = bs4.BeautifulSoup(req_anek.text, "html.parser")
-            result_find = soup.select('.anekdot_text')
-            for result in result_find:
-                array_anekdots.append(result.getText().strip())
-            return array_anekdots[0]
+        bot.send_message(chat_id, text=get_anekdot())
 
-        bot.send_message(chat_id, text="ещё не готово")
 
     elif ms_text == "WEB-камера":
         bot.send_message(chat_id, text="ещё не готово")
@@ -73,10 +66,21 @@ def get_text_messages(message):
         bot.send_photo(message.chat.id, img, reply_markup=key1)
 
     else:
-        pass
-        # -----------------------------------------------------------------------
 
 
+        bot.send_message(chat_id, text="я слышу, сообщение:"+ ms_text)
+
+# -----------------------------------------------------------------------
+def get_anekdot():
+    array_anekdots = []
+    req_anek = requests.get('http://anekdotme.ru/random')
+    soup = bs4.BeautifulSoup(req_anek.text, "html.parser")
+    result_find = soup.select('.anekdot_text')
+    for result in result_find:
+        array_anekdots.append(result.getText().strip())
+    return array_anekdots[0]
+
+# -----------------------------------------------------------------------
 bot.polling(none_stop=True, interval=0)  # Запускаем бота
 
 print()
