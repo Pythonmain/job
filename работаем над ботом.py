@@ -9,7 +9,7 @@ import requests
 import bs4
 import botGames
 from menuBot import Menu
-# import DZ  # домашнее задание от первого урока
+import DZ  # домашнее задание от первого урока
 
 bot = telebot.TeleBot('5176514754:AAHx4jWsOtLAacgQ6C5-T9D6FHe1y6wnwEo')
 game21 = None
