@@ -1,7 +1,12 @@
 
 # -----------------------------------------------------------------------
+import requests
+
+
 def dz1(bot, chat_id):
-    bot.send_message(chat_id, text="привет")
+    # car = get_car()
+    bot.send_photo(chat_id, photo=get_car(), caption="Вот тебе собачка!")
+    # bot.send_message(chat_id, text=str(car))
 # -----------------------------------------------------------------------
 def dz2(bot, chat_id):
     bot.send_message(chat_id, text="как дела?")
@@ -43,6 +48,12 @@ def my_inputInt_SecondPart(message, botQuestion, txtQuestion, ResponseHandler):
     except ValueError:
         botQuestion.send_message(chat_id,
                          text="Можно вводить ТОЛЬКО целое число в десятичной системе исчисления (символами от 0 до 9)!\nПопробуйте еще раз...")
-        my_inputInt(botQuestion, chat_id, txtQuestion, ResponseHandler)  # это не рекурсия, но очень похоже
-        # у нас пара процедур, которые вызывают друг-друга, пока пользователь не введёт корректные данные,
-        # и тогда этот цикл прервётся, и управление перейдёт "наружу", в ResponseHandler
+        my_inputInt(botQuestion, chat_id, txtQuestion, ResponseHandler)
+
+def get_car():
+    url = ''
+    req = requests.get('https://www.1zoom.ru/%D0%90%D0%B2%D1%82%D0%BE%D0%BC%D0%BE%D0%B1%D0%B8%D0%BB%D0%B8/t2/1/')
+    if req.status_code == 200:
+        r_json = req.json()
+        url = r_json['url']
+    return url

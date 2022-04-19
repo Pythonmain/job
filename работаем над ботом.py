@@ -53,6 +53,9 @@ def get_text_messages(message):
         elif ms_text == "Угадай кто?":
             get_ManOrNot(chat_id)
 
+        elif ms_text == "Прислать машину":
+            bot.send_photo(chat_id, photo=get_carURL(), caption="Вот тебе машинка!")
+
         elif ms_text == "Карту!":
             if game21 == None:
                 goto_menu(chat_id, "Выход")
@@ -221,6 +224,14 @@ def get_randomFilm():
 
     return infoFilm
 # ---------------------------------------------------------------------
+def get_carURL():
+    url = ""
+    req = requests.get('https://www.google.com/search?source=univ&tbm=isch&q=%D1%80%D0%B0%D0%BD%D0%B4%D0%BE%D0%BC%D0%BD%D0%B0%D1%8F+%D0%BC%D0%B0%D1%88%D0%B8%D0%BD%D0%B0&fir=DFzwlyZ0zkcV-M%252C9WETWN7P6ArR_M%252C_%253B9X1kgXHaJMvF7M%252CwFiQh2heLBQVlM%252C_%253BfkiExyissZVitM%252CP63MNkVyloIhaM%252C_%253BRcwz6k-yvFOExM%252CiMraqHGyItUABM%252C_%253BFUsn1u5JmNpFDM%252C9WETWN7P6ArR_M%252C_%253B7letWZJM7qk-6M%252CFJWcwKmJxv_mIM%252C_%253BO8uVBRztPOiPyM%252CXHdGSFu78vOydM%252C_%253BvSsAY4zWoy2TsM%252Cw0D0WqqACN2URM%252C_%253BIaDbTwREM2DMyM%252C5m1MD4uYzRrt4M%252C_%253BwieoIWUwlEyaeM%252Ct74FxIkzwbH7-M%252C_&usg=AI4_-kRPGyVWVlKofD3AK6WCe2BDdwp0zA&sa=X&ved=2ahUKEwjzrJSVjqD3AhXItYsKHVPEByIQjJkEegQIBBAC&biw=1920&bih=969&dpr=1')
+    if req.status_code == 200:
+        r_json = req.json()
+        url = r_json['url']
+        # url.split("/")[-1]
+    return url
 
 
 bot.polling(none_stop=True, interval=0)  # Запускаем бота
