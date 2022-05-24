@@ -1,12 +1,11 @@
 from telebot import types
 
 
-# -----------------------------------------------------------------------
+
 class Menu:
-    hash = {}  # тут будем накапливать все созданные экземпляры класса
-    cur_menu = None  # тут будет находиться текущий экземпляр класса текущее меню
-    extendedParameters = {}  # это место хранения дополнительных параметров для передачи в inline кнопки
-    # ПЕРЕПИСАТЬ для хранения параметров привязанных к chat_id и названию кнопки
+    hash = {}
+    cur_menu = None
+    extendedParameters = {}
 
     def __init__(self, name, buttons=None, parent=None, action=None):
         self.parent = parent
@@ -15,10 +14,10 @@ class Menu:
         self.action = action
 
         markup = types.ReplyKeyboardMarkup(resize_keyboard=True, row_width=5)
-        markup.add(*buttons)  # Обратите внимание - звёздочка используется для распаковки списка
+        markup.add(*buttons)
         self.markup = markup
 
-        self.__class__.hash[name] = self  # в классе содержится словарь, со всеми экземплярами класса, обновим его
+        self.__class__.hash[name] = self
 
     @classmethod
     def getExtPar(cls, id):
@@ -39,9 +38,9 @@ class Menu:
         return menu
 
 
-m_main = Menu("Главное меню", buttons=["Развлечения", "Игры", "ДЗ", "Помощь"])
+m_main = Menu("Главное меню", buttons=["Развлечения", "Игры", "ДЗ", "Машина"])
 
-m_games = Menu("Игры", buttons=["Камень, ножницы, бумага", "Игра в 21", "Угадай кто?", "Выход"], parent=m_main)
+m_games = Menu("Игры", buttons=["Камень, ножницы, бумага", "Игра в 21", "Прислать пушистого", "Выход"], parent=m_main)
 m_game_21 = Menu("Игра в 21", buttons=["Карту!", "Стоп!", "Выход"], parent=m_games, action="game_21")
 m_game_rsp = Menu("Камень, ножницы, бумага", buttons=["Камень", "Ножницы", "Бумага", "Выход"], parent=m_games, action="game_rsp")
 

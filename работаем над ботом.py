@@ -15,16 +15,12 @@ bot = telebot.TeleBot('5176514754:AAHx4jWsOtLAacgQ6C5-T9D6FHe1y6wnwEo')
 game21 = None
 
 
-# -----------------------------------------------------------------------
-
 @bot.message_handler(commands="start")
 def command(message, res=False):
     txt_message = f"Привет, {message.from_user.first_name}! Я тестовый бот для курса программирования на языке Python"
     bot.send_message(message.chat.id, text=txt_message, reply_markup=Menu.getMenu("Главное меню").markup)
 
 
-# -----------------------------------------------------------------------
-# Получение сообщений от юзера
 @bot.message_handler(content_types=['text'])
 def get_text_messages(message):
     global game21
@@ -38,7 +34,7 @@ def get_text_messages(message):
 
     if Menu.cur_menu != None and ms_text in Menu.cur_menu.buttons:
 
-        if ms_text == "Помощь":
+        if ms_text == "Машина":
             send_help(chat_id)
 
         elif ms_text == "Прислать собаку":
@@ -50,11 +46,10 @@ def get_text_messages(message):
         elif ms_text == "Прислать фильм":
             send_film(chat_id)
 
-        elif ms_text == "Угадай кто?":
+        elif ms_text == "Прислать пушистого":
             get_ManOrNot(chat_id)
 
-        elif ms_text == "Прислать машину":
-            bot.send_photo(chat_id, photo=get_carURL(), caption="Вот тебе машинка!")
+
 
         elif ms_text == "Карту!":
             if game21 == None:
@@ -92,19 +87,19 @@ def get_text_messages(message):
         elif ms_text == "Задание-6":
             DZ.dz6(bot, chat_id)
 
-    else:  # ...........................................................................................................
+    else:
         bot.send_message(chat_id, text="Мне жаль, я не понимаю вашу команду: " + ms_text)
         goto_menu(chat_id, "Главное меню")
 
-# -----------------------------------------------------------------------
+
 @bot.callback_query_handler(func=lambda call: True)
 def callback_worker(call):
 
     pass
 
-# -----------------------------------------------------------------------
+
 def goto_menu(chat_id, name_menu):
-    # получение нужного элемента меню
+
     if name_menu == "Выход" and Menu.cur_menu != None and Menu.cur_menu.parent != None:
         target_menu = Menu.getMenu(Menu.cur_menu.parent.name)
     else:
@@ -126,7 +121,7 @@ def goto_menu(chat_id, name_menu):
         return False
 
 
-# -----------------------------------------------------------------------
+
 def getMediaCards(game21):
     medias = []
     for url in game21.arr_cards_URL:
@@ -134,16 +129,17 @@ def getMediaCards(game21):
     return medias
 
 
-# -----------------------------------------------------------------------
+
 def send_help(chat_id):
-    global bot
-    bot.send_message(chat_id, "Автор: Богдан")
     markup = types.InlineKeyboardMarkup()
-    btn1 = types.InlineKeyboardButton(text="Напишите автору", url="0")
+    btn1 = types.InlineKeyboardButton(text="Хочу машину", url="https://auto.ru/")
     markup.add(btn1)
+    req = requests.get("https://thishorsedoesnotexist.com/", allow_redirects=True)
+    if req.status_code == 200:
+        img = BytesIO(req.content)
+        bot.send_photo(chat_id, photo=img, reply_markup=markup, caption="Это мощный конь?")
 
 
-# -----------------------------------------------------------------------
 def send_film(chat_id):
     film = get_randomFilm()
     info_str = f"<b>{film['Наименование']}</b>\n" \
@@ -158,7 +154,7 @@ def send_film(chat_id):
     bot.send_photo(chat_id, photo=film['Обложка_url'], caption=info_str, parse_mode='HTML', reply_markup=markup)
 
 
-# -----------------------------------------------------------------------
+
 def get_anekdot():
     array_anekdots = []
     req_anek = requests.get('http://anekdotme.ru/random')
@@ -172,29 +168,29 @@ def get_anekdot():
     else:
         return ""
 
-# -----------------------------------------------------------------------
+
 def get_dogURL():
     url = ""
     req = requests.get('https://random.dog/woof.json')
     if req.status_code == 200:
         r_json = req.json()
         url = r_json['url']
-        # url.split("/")[-1]
+
     return url
-# -----------------------------------------------------------------------
+
 def get_ManOrNot(chat_id):
     global bot
 
     markup = types.InlineKeyboardMarkup()
-    btn1 = types.InlineKeyboardButton(text="Проверить", url="https://vc.ru/dev/58543-thispersondoesnotexist-sayt-generator-realistichnyh-lic")
+    btn1 = types.InlineKeyboardButton(text="Проверить", url="https://www.youtube.com/watch?v=-452p_9ESbM")
     markup.add(btn1)
 
-    req = requests.get("https://thispersondoesnotexist.com/image", allow_redirects=True)
+    req = requests.get("https://thiscatdoesnotexist.com/", allow_redirects=True)
     if req.status_code == 200:
         img = BytesIO(req.content)
-        bot.send_photo(chat_id, photo=img, reply_markup=markup, caption="Этот человек реален?")
+        bot.send_photo(chat_id, photo=img, reply_markup=markup, caption="Это милое животное?")
 
-# ---------------------------------------------------------------------
+
 def get_randomFilm():
     url = 'https://randomfilm.ru/'
     infoFilm = {}
@@ -223,17 +219,11 @@ def get_randomFilm():
     infoFilm["фильм_url"] = url + details[7].contents[0]["href"]
 
     return infoFilm
-# ---------------------------------------------------------------------
-def get_carURL():
-    url = ""
-    req = requests.get('https://www.google.com/search?source=univ&tbm=isch&q=%D1%80%D0%B0%D0%BD%D0%B4%D0%BE%D0%BC%D0%BD%D0%B0%D1%8F+%D0%BC%D0%B0%D1%88%D0%B8%D0%BD%D0%B0&fir=DFzwlyZ0zkcV-M%252C9WETWN7P6ArR_M%252C_%253B9X1kgXHaJMvF7M%252CwFiQh2heLBQVlM%252C_%253BfkiExyissZVitM%252CP63MNkVyloIhaM%252C_%253BRcwz6k-yvFOExM%252CiMraqHGyItUABM%252C_%253BFUsn1u5JmNpFDM%252C9WETWN7P6ArR_M%252C_%253B7letWZJM7qk-6M%252CFJWcwKmJxv_mIM%252C_%253BO8uVBRztPOiPyM%252CXHdGSFu78vOydM%252C_%253BvSsAY4zWoy2TsM%252Cw0D0WqqACN2URM%252C_%253BIaDbTwREM2DMyM%252C5m1MD4uYzRrt4M%252C_%253BwieoIWUwlEyaeM%252Ct74FxIkzwbH7-M%252C_&usg=AI4_-kRPGyVWVlKofD3AK6WCe2BDdwp0zA&sa=X&ved=2ahUKEwjzrJSVjqD3AhXItYsKHVPEByIQjJkEegQIBBAC&biw=1920&bih=969&dpr=1')
-    if req.status_code == 200:
-        r_json = req.json()
-        url = r_json['url']
-        # url.split("/")[-1]
-    return url
 
 
-bot.polling(none_stop=True, interval=0)  # Запускаем бота
+
+
+
+bot.polling(none_stop=True, interval=0)
 
 print()

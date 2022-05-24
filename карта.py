@@ -1,15 +1,15 @@
 import requests
 
 
-# -----------------------------------------------------------------------
+
 class Card:
-   emo_SPADES = "U0002660"  # Unicod эмоджи Пики
-   emo_CLUBS = "U0002663"  # Unicod эмоджи Крести
-   emo_HEARTS = "U0002665"  # Unicod эмоджи Черви
-   emo_DIAMONDS = "U0002666"  # Unicod эмоджи Буби
+   emo_SPADES = "U0002660"
+   emo_CLUBS = "U0002663"
+   emo_HEARTS = "U0002665"
+   emo_DIAMONDS = "U0002666"
 
    def __init__(self, card):
-       if isinstance(card, dict):  # если передали словарь
+       if isinstance(card, dict):
            self.__card_JSON = card
            self.code = card["code"]
            self.suit = card["suit"]
@@ -19,7 +19,7 @@ class Card:
            self.__imagesPNG_URL = card["images"]["png"]
            self.__imagesSVG_URL = card["images"]["svg"]
 
-       elif isinstance(card, str):  # карту передали строкой, в формате "2S"
+       elif isinstance(card, str):
            self.__card_JSON = None
            self.code = card
 
@@ -39,13 +39,13 @@ class Card:
 
            suit = card[1]
            if suit == "S":
-               self.suit = "SPADES"  # Пики
+               self.suit = "SPADES"
            elif suit == "C":
-               self.suit = "CLUBS"  # Крести
+               self.suit = "CLUBS"
            elif suit == "H":
-               self.suit = "HEARTS"  # Черви
+               self.suit = "HEARTS"
            elif suit == "D":
-               self.suit = "DIAMONDS"  # Буби
+               self.suit = "DIAMONDS"
 
            self.cost = self.get_cost_card()
            self.color = self.get_color_card()
@@ -75,48 +75,48 @@ class Card:
            return "RED"
 
 
-# -----------------------------------------------------------------------
+
 class Game21:
    def __init__(self, deck_count=1):
-       new_pack = self.new_pack(deck_count)  # в конструкторе создаём новую пачку из deck_count-колод
+       new_pack = self.new_pack(deck_count)
        if new_pack is not None:
-           self.pack_card = new_pack  # сформированная колода
-           self.remaining = new_pack["remaining"],  # количество оставшихся карт в колоде
-           self.card_in_game = []  # карты в игре
-           self.arr_cards_URL = []  # URL карт игрока
-           self.score = 0  # очки игрока
-           self.status = None  # статус игры, True - игрок выиграл, False - Игрок проиграл, None - Игра продолжается
+           self.pack_card = new_pack
+           self.remaining = new_pack["remaining"],
+           self.card_in_game = []
+           self.arr_cards_URL = []
+           self.score = 0
+           self.status = None
 
-   # ---------------------------------------------------------------------
+
    def new_pack(self, deck_count):
        response = requests.get(f"https://deckofcardsapi.com/api/deck/new/shuffle/?deck_count={deck_count}")
-       # создание стопки карт из "deck_count" колод по 52 карты
+
        if response.status_code != 200:
            return None
        pack_card = response.json()
        return pack_card
 
-   # ---------------------------------------------------------------------
+
    def get_cards(self, card_count=1):
        if self.pack_card == None:
            return None
-       if self.status != None:  # игра закончена
+       if self.status != None:
            return None
 
        deck_id = self.pack_card["deck_id"]
        response = requests.get(f"https://deckofcardsapi.com/api/deck/{deck_id}/draw/?count={card_count}")
-       # достать из deck_id-колоды card_count-карт
+
        if response.status_code != 200:
            return False
 
        new_cards = response.json()
        if new_cards["success"] != True:
            return False
-       self.remaining = new_cards["remaining"]  # обновим в классе количество оставшихся карт в колоде
+       self.remaining = new_cards["remaining"]
 
        arr_newCards = []
        for card in new_cards["cards"]:
-           card_obj = Card(card)  # создаем объекты класса Card и добавляем их в список карт у игрока
+           card_obj = Card(card)
            arr_newCards.append(card_obj)
            self.card_in_game.append(card_obj)
            self.score = self.score + card_obj.cost
@@ -136,6 +136,6 @@ class Game21:
        return text_game
 
 
-# -----------------------------------------------------------------------
+
 if __name__ == "__main__":
    print("Этот код должен использоваться ТОЛЬКО в качестве модуля!")
