@@ -12,9 +12,9 @@ def getAudioFromURL(URL):
 
 
 # -----------------------------------------------------------------------
-def getTextFromVoice(audioData):  # распознавание голоса
+def getTextFromVoice(audioData):
     import tempfile
-    from pydub import AudioSegment  # для работы требуется ffmpeg
+    from pydub import AudioSegment
 
     with tempfile.NamedTemporaryFile() as temp_ogg:
         with tempfile.NamedTemporaryFile() as temp_wav:
@@ -39,24 +39,24 @@ def getTextFromVoice(audioData):  # распознавание голоса
 
 
 # -----------------------------------------------------------------------
-def say_text(msg, file=None):  # Функция, которая будет произносить произвольный текст
+def say_text(msg, file=None):
     import pyttsx3
 
     tts = pyttsx3.init()
-    tts.setProperty('voice', 'ru')  # Наш голос по умолчанию
-    tts.setProperty('rate', 180)  # Скорость в % (может быть > 100)
-    tts.setProperty('volume', 1)  # Громкость (значение от 0 до 1)
+    tts.setProperty('voice', 'ru')
+    tts.setProperty('rate', 180)
+    tts.setProperty('volume', 1)
 
     if file is None:
         tts.say(msg)
-        tts.runAndWait()  # Воспроизвести очередь реплик и дождаться окончания речи
+        tts.runAndWait()
     else:
         tts.save_to_file(msg, file)
         tts.runAndWait()
 
 
 # -----------------------------------------------------------------------
-def say_time(time=None, file=None):  # Функция, которая будет произносить время
+def say_time(time=None, file=None):
     from pytils import numeral
 
     time = datetime.now() if time is None else time
@@ -76,20 +76,19 @@ def say_time(time=None, file=None):  # Функция, которая будет
 
 # -----------------------------------------------------------------------
 def timer(interval, func, argsFunc=[], start=None, stop=None):
-    # now = datetime.now()    # для отладки
-    # print(now)              # для отладки
+
 
     # запустим выполнение в отдельном потоке
     objTimer = threading.Timer(0, func, args=argsFunc)
     objTimer.start()
 
-    # посчитаем через сколько будет очередной, кратный интервалу момент запуска
+
     now = datetime.now()
     ms = (now.hour * 60 * 60 + now.second) * 1000000 + now.microsecond
     d = interval * 1000000
     delay = (d - (ms - (ms // d) * d)) / 1000000
-    # print(now, delay)       # для отладки
-    objTimer = threading.Timer(delay, timer, args=[interval, func])  # ДОПИСАТЬ: передачу argsFunc
+
+    objTimer = threading.Timer(delay, timer, args=[interval, func])
     objTimer.start()
 
 # -----------------------------------------------------------------------

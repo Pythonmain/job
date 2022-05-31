@@ -9,19 +9,19 @@ def get_text_messages(bot, cur_user, message):
     chat_id = message.chat.id
     ms_text = message.text
 
-    if ms_text == "Прислать собаку":
+    if ms_text == "собаку":
         bot.send_photo(chat_id, photo=get_dogURL(), caption="Вот тебе собачка!")
 
-    elif ms_text == "Прислать лису":
+    elif ms_text == "лису":
         bot.send_photo(chat_id, photo=get_foxURL(), caption="Вот тебе лисичка!")
 
-    elif ms_text == "Прислать анекдот":
+    elif ms_text == "анекдот":
         bot.send_message(chat_id, text=get_anekdot())
 
     elif ms_text == "Прислать новости":
         bot.send_message(chat_id, text=get_news())
 
-    elif ms_text == "Прислать фильм":
+    elif ms_text == "фильм":
         send_film(bot, chat_id)
 
     elif ms_text == "Угадай кто?":
