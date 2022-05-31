@@ -1,31 +1,65 @@
 
+def get_text_messages(bot, cur_user, message):
+    chat_id = message.chat.id
+    ms_text = message.text
+
+    if ms_text == "Задание-1":
+        dz1(bot, chat_id)
+
+    elif ms_text == "Задание-2":
+        dz2(bot, chat_id)
+
+    elif ms_text == "Задание-3":
+        dz3(bot, chat_id)
+
+    elif ms_text == "Задание-4":
+        dz4(bot, chat_id)
+
+    elif ms_text == "Задание-5":
+        dz5(bot, chat_id)
+
+    elif ms_text == "Задание-6":
+        dz6(bot, chat_id)
+
 # -----------------------------------------------------------------------
-import requests
-
-
 def dz1(bot, chat_id):
-    # car = get_car()
-    bot.send_photo(chat_id, photo=get_car(), caption="Вот тебе собачка!")
-    # bot.send_message(chat_id, text=str(car))
+    my_name, my_age = "Богдан", 19
+    my_name_X5 = (my_name + " ") * 5
+    bot.send_message(chat_id, "Имя: %s, Возраст %s, \nИмя повторённое 5 раз: %s" % (my_name, my_age, my_name_X5))
 # -----------------------------------------------------------------------
 def dz2(bot, chat_id):
-    bot.send_message(chat_id, text="как дела?")
+    age_answer = lambda message, joke: bot.send_message(chat_id,f"{joke} {message.text}? \nТянешь на все {round(int(message.text) / 2)}!")
+    age_check = lambda message: age_answer(message, "Целых") if (int(correct_age(bot, chat_id, message.text)) <= 18) else age_answer(message, "Всего")
+    qwerty = lambda message: my_input(bot, chat_id,f"Привет, {correct_name (bot, chat_id, message.text)}  \nСколько тебе лет?",age_check)
+    my_input(bot, chat_id, "Как тебя зовут?", qwerty)
 # -----------------------------------------------------------------------
+
 def dz3(bot, chat_id):
-    bot.send_message(chat_id, text="ДОДЕЛАТЬ")
+    qwerty = lambda message: bot.send_message(chat_id, "{}\n{}\n{}\n{}".format(message.text[1:-1], message.text[::-1],message.text[-3:], message.text[:5]))
+    my_input(bot, chat_id, "Как тебя зовут?", qwerty)
 # -----------------------------------------------------------------------
 def dz4(bot, chat_id):
-    bot.send_message(chat_id, text="ДОДЕЛАТЬ")
+    qwerty = lambda message: bot.send_message(chat_id,f"В твоём имени {len(message.text)} букв!")
+    my_input(bot, chat_id, "Как тебя зовут?", qwerty)
+
+
 # -----------------------------------------------------------------------
 def dz5(bot, chat_id):
-    my_inputInt(bot, chat_id, "Сколько вам лет?", dz5_ResponseHandler)
+    mult = lambda x: int(x[0]) * int(x[1])
+    addit = lambda x: int(x[0]) + int(x[1])
+    age_ans = lambda message: bot.send_message(chat_id,"Произведение цифр твоего возраста: {}\nСумма цифр твоего вораста: {}".format(mult(message.text), addit(message.text)))
+    my_input(bot, chat_id, "Сколько тебе лет?", age_ans)
 
 def dz5_ResponseHandler(bot, chat_id, age_int):
-    bot.send_message(chat_id, text=f"О! тебе уже {age_int}! \nА через год будет уже {age_int+1}!!!")
+    qwerty = lambda message: bot.send_message(chat_id,
+    "{}\n{}\n{}\n{}".format(message.text.upper(), message.text.lower(),
+    message.text.capitalize(),
+    message.text[0].lower() + message.text[1:].upper()))
+    my_input(bot, chat_id, "Как тебя зовут?", qwerty)
 # -----------------------------------------------------------------------
 def dz6(bot, chat_id):
-    dz6_ResponseHandler = lambda message: bot.send_message(chat_id, f"Добро пожаловать {message.text}! У тебя красивое имя, в нём {len(message.text)} букв!")
-    my_input(bot, chat_id, "Как тебя зовут?", dz6_ResponseHandler)
+    proc_answer = lambda message: bot.send_message(chat_id, "Абсолютно точно верно, да, да, ты угадал!") if (message.text == "1") else bot.send_message(chat_id, "Нет, хах")
+    my_input(bot, chat_id, "Чему равен натуральный логарифм числа \"e\"? ", proc_answer)
 
 # -----------------------------------------------------------------------
 # -----------------------------------------------------------------------
@@ -35,25 +69,21 @@ def my_input(bot, chat_id, txt, ResponseHandler):
 # -----------------------------------------------------------------------
 def my_inputInt(bot, chat_id, txt, ResponseHandler):
 
+
+
     message = bot.send_message(chat_id, text=txt)
     bot.register_next_step_handler(message, my_inputInt_SecondPart, botQuestion=bot, txtQuestion=txt, ResponseHandler=ResponseHandler)
-    # bot.register_next_step_handler(message, my_inputInt_return, bot, txt, ResponseHandler)  # то-же самое, но короче
+
 
 def my_inputInt_SecondPart(message, botQuestion, txtQuestion, ResponseHandler):
     chat_id = message.chat.id
     try:
+        if message.content_type != "text":
+            raise ValueError
         var_int = int(message.text)
-        # данные корректно преобразовались в int, можно вызвать обработчик ответа, и передать туда наше число
+
         ResponseHandler(botQuestion, chat_id, var_int)
     except ValueError:
         botQuestion.send_message(chat_id,
                          text="Можно вводить ТОЛЬКО целое число в десятичной системе исчисления (символами от 0 до 9)!\nПопробуйте еще раз...")
-        my_inputInt(botQuestion, chat_id, txtQuestion, ResponseHandler)
-
-def get_car():
-    url = ''
-    req = requests.get('https://www.1zoom.ru/%D0%90%D0%B2%D1%82%D0%BE%D0%BC%D0%BE%D0%B1%D0%B8%D0%BB%D0%B8/t2/1/')
-    if req.status_code == 200:
-        r_json = req.json()
-        url = r_json['url']
-    return url
+        my_inputInt(botQuestion, chat_id, txtQuestion, ResponseHandler)  # это не рекурсия, но очень похоже
